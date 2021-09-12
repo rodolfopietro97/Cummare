@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package publish;
+
+// The greeting service definition.
+service PublishTopic {
+  // Sends a greeting
+  rpc publishMessage (PublishRequest) returns (PublishResponse) {}
+}
+
+// The request message containing the user's name.
+message PublishRequest {
+  string topic = 1;
+  string message = 2;
+}
+
+// The response message containing the greetings
+message PublishResponse {
+  bool ack = 1;
+}
