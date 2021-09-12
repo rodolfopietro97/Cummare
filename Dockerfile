@@ -5,7 +5,7 @@ FROM node
 WORKDIR /app/cummare
 
 # Install Global dependendencies
-RUN npm install -g typescript
+RUN npm install -g typescript && npm install -g grpc-tools
 
 # Install local dependencies
 COPY package*.json /app/cummare/
