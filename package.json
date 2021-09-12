@@ -1,0 +1,22 @@
+{
+    "name": "cummare_p2p_layer",
+    "version": "1.0.0",
+    "description": "P2P Layer of NdujaChain Blockchain",
+    "main": "app.js",
+    "scripts": {
+        "serve": "tsc && node dist/app.js",
+        "build": "tsc",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "P2PLayer",
+        "PubSub",
+        "Blockchain",
+        "NdujaChain"
+    ],
+    "author": "Rodolfo Pietro Calabrò",
+    "license": "ISC",
+    "devDependencies": {
+        "typescript": "^4.4.3"
+    }
+}
