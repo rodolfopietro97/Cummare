@@ -2,19 +2,38 @@ syntax = "proto3";
 
 package publish;
 
-// The greeting service definition.
+/**
+ * Publish topic proto.
+ *
+ * In the PUB-SUB part, it is the PUB
+ */
 service PublishTopic {
-  // Sends a greeting
+
+  /**
+   * Publish a message
+   */
   rpc publishMessage (PublishRequest) returns (PublishResponse) {}
 }
 
-// The request message containing the user's name.
+/**
+ * Publish message request
+ */
 message PublishRequest {
+
+  /**
+   * Topic to publish
+   */
   string topic = 1;
+
+  /**
+   * Message of topic
+   */
   string message = 2;
 }
 
-// The response message containing the greetings
+/**
+ * Publish message response
+ */
 message PublishResponse {
   bool ack = 1;
 }

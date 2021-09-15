@@ -1,18 +1,25 @@
-var messages = require('./grpc_generated_protos/protos/Publish_pb');
-var services = require('./grpc_generated_protos/protos/Publish_grpc_pb');
+import { CummareClient } from './peers/CummareClient'
 
-var grpc = require('@grpc/grpc-js');
+import { readFileSync } from 'fs';
 
 function mainClient() {
+  // Set cummare server configuration
+  const cummareClientConfig = JSON.parse(
+    readFileSync('./CummareClientConfig.json', 'utf-8')
+  );
 
-  var client = new services.PublishTopicClient('localhost:50052', grpc.credentials.createInsecure());
-  var request = new messages.PublishRequest();
-  request.setMessage("weee");
-  request.setTopic("ouu");
-  
-  client.publishMessage(request, function(err, response) {
-    console.log('Greeting:', response.getAck());
-  });
+  // Init server
+  var cummareServer = new CummareClient(cummareClientConfig.serverBind)
+
+  // Start server
+  var message = "we", topic = "ou"
+  cummareServer.publishMessage(
+    message, 
+    topic, 
+    (ack) => {
+      console.log("Server ha received:" + message)
+    }
+  );
 }
 
 mainClient();

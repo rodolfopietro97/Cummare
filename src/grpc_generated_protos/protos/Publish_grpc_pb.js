@@ -27,9 +27,13 @@ function deserialize_publish_PublishResponse(buffer_arg) {
 }
 
 
-// The greeting service definition.
+// *
+// Publish topic proto.
+//
+// In the PUB-SUB part, it is the PUB
 var PublishTopicService = exports.PublishTopicService = {
-  // Sends a greeting
+  // *
+// Publish a message
 publishMessage: {
     path: '/publish.PublishTopic/publishMessage',
     requestStream: false,
