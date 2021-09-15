@@ -13,13 +13,9 @@ function mainClient() {
 
   // Start server
   var message = "we", topic = "ou"
-  cummareServer.publishMessage(
-    message, 
-    topic, 
-    (ack) => {
+  cummareServer.publishMessage(message, topic, (ack) => {
       console.log("Server ha received:" + message)
-    }
-  );
+  });
 }
 
 mainClient();

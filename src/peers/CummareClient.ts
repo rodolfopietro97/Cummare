@@ -55,6 +55,14 @@ export class CummareClient {
 
     }
 
+
+    /**
+     * Publish message function
+     * 
+     * @param topic Topic of message 
+     * @param message Message to send
+     * @param onPublishMessage Callback that sat "What do with on publish message response"
+     */
     publishMessage(topic: string, message: string, onPublishMessage: any): void {
         // Init request
         var request = new publishMessages.PublishRequest();
