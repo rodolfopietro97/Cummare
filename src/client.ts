@@ -9,12 +9,12 @@ function mainClient() {
   );
 
   // Init server
-  var cummareServer = new CummareClient(cummareClientConfig.serverBind)
+  var cummareClient = new CummareClient(cummareClientConfig.serverBind)
 
   // Start server
   var message = "we", topic = "ou"
-  cummareServer.publishMessage(message, topic, (ack) => {
-      console.log("Server ha received:" + message)
+  cummareClient.publishMessage(message, topic, (ack) => {
+      console.log("Server has received:" + message)
   });
 }
 

@@ -5,7 +5,6 @@ var publishServices = require('../grpc_generated_protos/protos/Publish_grpc_pb')
 // GRPC
 var grpc = require('@grpc/grpc-js');
 
-
 /**
  * Client class.
  * 
@@ -18,7 +17,6 @@ export class CummareClient {
      * Internal GRPC client to use
      */
     grpcClient: any
-
     
     /**
      * Binds address-port of server.
@@ -33,7 +31,6 @@ export class CummareClient {
      * A pair ip:port wfind servers
      */
      currentAck: boolean = false
-
 
     /**
      * Constructor with parameters
@@ -54,7 +51,6 @@ export class CummareClient {
         )
 
     }
-
 
     /**
      * Publish message function
@@ -78,5 +74,4 @@ export class CummareClient {
             }
         );
     }
-
 }

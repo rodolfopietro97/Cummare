@@ -5,7 +5,6 @@ var publishServices = require('../grpc_generated_protos/protos/Publish_grpc_pb')
 // GRPC
 var grpc = require('@grpc/grpc-js');
 
-
 /**
  * Server class.
  * 
@@ -14,12 +13,10 @@ var grpc = require('@grpc/grpc-js');
  */
 export class CummareServer {
 
-
     /**
      * Internal GRPC servers to use
      */
     grpcServers: Array<any> = []
-
 
     /**
      * Binds address-port.
@@ -27,7 +24,6 @@ export class CummareServer {
      * A pair ip:port where server listening
      */
     binds: Array<string>
-
 
     /**
      * Constructor with parameters
@@ -57,7 +53,6 @@ export class CummareServer {
         })
     }
 
-
     /**
      * Start function.
      * Server start listening on bind
@@ -74,7 +69,6 @@ export class CummareServer {
             );
         }
     }
-
 
     /**
      * Publish a message
