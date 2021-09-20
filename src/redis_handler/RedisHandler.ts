@@ -38,9 +38,9 @@ export class RedisHandler {
      * @param message Messgae of topic
      */
     setTopic(topic: string, message: string): void {
-        // Add timespamp
+        // Add timespamp and age
         let messageObject = JSON.parse(message);
-        messageObject.timestamp = Date.now()
+        messageObject.timestamp = Date.now();
 
         // Push message with timestamp
         this.redisClient.rpush(topic, JSON.stringify(messageObject))
