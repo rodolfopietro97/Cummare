@@ -2,6 +2,10 @@
 var publishMessages = require('../grpc_generated_protos/protos/Publish_pb');
 var publishServices = require('../grpc_generated_protos/protos/Publish_grpc_pb');
 
+// Subscribe service
+var subscribeMessages = require('../grpc_generated_protos/protos/Subscribe_pb');
+var subscribeServices = require('../grpc_generated_protos/protos/Subscribe_grpc_pb');
+
 // GRPC
 var grpc = require('@grpc/grpc-js');
 
@@ -14,9 +18,14 @@ var grpc = require('@grpc/grpc-js');
 export class CummareClient {
 
     /**
-     * Internal GRPC client to use
+     * Internal GRPC client to use for publish request
      */
-    grpcClient: any
+    grpcPublishClient: any
+
+    /**
+     * Internal GRPC client to use for publish request
+     */
+    grpcSubscribeClient: any
     
     /**
      * Binds address-port of server.
@@ -45,8 +54,14 @@ export class CummareClient {
          * Init grpc client services for bind server
          */
         // Publish service
-        this.grpcClient = new publishServices.PublishTopicClient(
+        this.grpcPublishClient = new publishServices.PublishTopicClient(
             this.serverBind, 
+            grpc.credentials.createInsecure()
+        )
+
+        // Subscribe service
+        this.grpcSubscribeClient = new subscribeServices.SubscribeTopicClient(
+            this.serverBind,
             grpc.credentials.createInsecure()
         )
 
@@ -67,11 +82,34 @@ export class CummareClient {
         request.setTopic(topic);
 
         // Publish for specific client
-        this.grpcClient.publishMessage(
+        this.grpcPublishClient.publishMessage(
             request, 
             (error, response) => {
                 onPublishMessage(response.getAck())
             }
         );
+    }
+
+    /**
+     * Subscribe to a topic function
+     * 
+     * @param topic Topic to subscribe
+     * @param onSubscribeTopic Callback that sat "What do with on subscribe message response"
+     */
+    subscribeTopic(topic: string, onSubscribeTopic: any): void {
+        // Init request
+        var request = new subscribeMessages.SubscribeRequest();
+
+        request.setTopic(topic);
+
+        // Subscribe for specific client
+        let call = this.grpcSubscribeClient.subscribeTopic(request);
+
+        call.on('data', function(response) {
+            console.log(response.getMessage());
+        });
+        call.on('end', function() {
+            console.log("Server has finish stream")
+        });
     }
 }

@@ -20,12 +20,20 @@ function mainClient() {
     // Creater a client
     var cummareClient = new CummareClient(serverBind)
 
-    // Send message request
-    cummareClient.publishMessage(cummareClientConfig.topic, JSON.stringify(cummareClientConfig.message), (ack) => {
-      if (ack)
-        console.log(`${serverBind} has received message`)
-      else
-        console.log(`${serverBind} has NOT received message`)
+    // Publish message request
+    cummareClient.publishMessage(
+      cummareClientConfig.topic, // Topic
+      JSON.stringify(cummareClientConfig.message), // Message
+      (ack) => { // Callback
+        if (ack)
+          console.log(`${serverBind} has received message`)
+        else
+          console.log(`${serverBind} has NOT received message`)
+    });
+
+    // Subscribe message request
+    cummareClient.subscribeTopic(cummareClientConfig.topic, (message) => {
+        console.log(`${message} for topic`)
     });
   });
 

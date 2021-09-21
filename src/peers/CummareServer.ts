@@ -4,6 +4,10 @@ import { RedisHandler } from "../redis_handler/RedisHandler";
 var publishMessages = require('../grpc_generated_protos/protos/Publish_pb');
 var publishServices = require('../grpc_generated_protos/protos/Publish_grpc_pb');
 
+// Subscribe service
+var subscribeMessages = require('../grpc_generated_protos/protos/Subscribe_pb');
+var subscribeServices = require('../grpc_generated_protos/protos/Subscribe_grpc_pb');
+
 // GRPC
 var grpc = require('@grpc/grpc-js');
 
@@ -66,10 +70,19 @@ export class CummareServer {
          */
         // Publish service for each grpcServer
         this.grpcServers.forEach((grpcServer) => {
+            // Add publish service
             grpcServer.addService(
                 publishServices.PublishTopicService,
                 {
                     publishMessage: this.publishMessage
+                }
+            );
+
+            // Add subscribe service
+            grpcServer.addService(
+                subscribeServices.SubscribeTopicService,
+                {
+                    subscribeTopic: this.subscribeTopic
                 }
             );
         });
@@ -96,10 +109,10 @@ export class CummareServer {
     /**
      * Publish a message
      * 
-     * @param call 
+     * @param callRequest 
      * @param publishMessageCallback 
      */
-    publishMessage(callRequest, publishMessageCallback) {
+    publishMessage(callRequest: any, publishMessageCallback: any) {
         // Init resposnse
         var reply = new publishMessages.PublishResponse();
 
@@ -114,6 +127,33 @@ export class CummareServer {
         reply.setAck(ack)
         publishMessageCallback(null, reply);
     }
+
+    /**
+     * Subscribe stream of messages
+     * 
+     * @param callRequest 
+     * @param publishMessageCallback 
+     */
+     subscribeTopic(callRequest: any) {
+        // Init resposnse
+        var reply = new subscribeMessages.SubscribeResponse();
+
+        // Get topic that client want to subscribe
+        var currentSubscribedTopic = callRequest.request.getTopic()
+
+        // Response
+        reply.setMessage("weeee")
+        callRequest.write(reply)
+
+        reply.setMessage("ouuuuuuuuuu")
+        callRequest.write(reply)
+
+        reply.setMessage(currentSubscribedTopic)
+        callRequest.write(reply)
+
+        callRequest.end();
+    }
+
 
     /**
      * Control if topic and message are valid and if valid publish messageo on topic queue

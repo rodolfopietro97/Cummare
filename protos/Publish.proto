@@ -35,5 +35,9 @@ message PublishRequest {
  * Publish message response
  */
 message PublishResponse {
+
+  /**
+   * Ack of request (if request is received or not)
+   */
   bool ack = 1;
 }
