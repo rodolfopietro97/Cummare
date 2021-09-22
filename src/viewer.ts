@@ -29,7 +29,7 @@ function mainViewer() {
     // For each allowed topic
     allowedTopics.forEach(async (allowedTopic) => {
 
-      // Get messager for topic and write it on the console
+      // Get messages for topic and write it on the console
       let messagesForTopic = await redisHandler.getTopic(allowedTopic)
       console.log(`Messages for topic '${allowedTopic}':\n\t${messagesForTopic.join('\n\t')}`)
     });

@@ -32,6 +32,16 @@ export class RedisHandler {
     }
 
     /**
+     * Delete specific message for topic
+     * 
+     * @param topic Topic to delete
+     * @param message Message to delete
+     */
+    deleteMessageForTopic(topic: string, message: string): void {
+        this.redisClient.lrem(topic, 0, message)
+    }
+
+    /**
      * Push a message for a specific topic
      * 
      * @param topic Topic of message

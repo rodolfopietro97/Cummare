@@ -1,7 +1,6 @@
 {
     "binds": [
-        "0.0.0.0:50052",
-        "0.0.0.0:50053"
+        "0.0.0.0:50052"
     ],
     "redis": {
         "port": 6379,
@@ -10,5 +9,5 @@
         "db": 0
     },
     "allowedTopics": ["transaction", "message"],
-    "maxTopicsAge": 3
+    "maxTopicsAgeMilliseconds": 5000
 }

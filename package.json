@@ -5,7 +5,8 @@
     "main": "server.js",
     "scripts": {
         "server": "npm run build && node dist/server.js",
-        "client": "npm run build && node dist/client.js",
+        "publish_client": "npm run build && node dist/simpleClientPublish.js",
+        "subscribe_client": "npm run build && node dist/simpleClientSubscribe.js",
         "refresher": "npm run build && node dist/refresher.js",
         "viewer": "npm run build && node dist/viewer.js",
         "build": "tsc && sh buildProtos.sh",

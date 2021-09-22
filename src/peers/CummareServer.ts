@@ -112,7 +112,7 @@ export class CummareServer {
      * @param callRequest 
      * @param publishMessageCallback 
      */
-    publishMessage(callRequest: any, publishMessageCallback: any): void {
+    async publishMessage(callRequest: any, publishMessageCallback: any): Promise<void> {
         // Init resposnse
         var reply = new publishMessages.PublishResponse();
 
@@ -121,7 +121,7 @@ export class CummareServer {
         var currentRequestMessage = callRequest.request.getMessage()
 
         // Control if topic and message are valid and if valid publish messageo on topic queue
-        var ack = CummareServer.controlTopicAndMessageAndEventuallyPublishMessage(currentRequestTopic, currentRequestMessage);
+        var ack = await CummareServer.controlTopicAndMessageAndEventuallyPublishMessage(currentRequestTopic, currentRequestMessage);
 
         // Response
         reply.setAck(ack)
@@ -134,7 +134,7 @@ export class CummareServer {
      * @param callRequest 
      * @param publishMessageCallback 
      */
-     async subscribeTopic(callRequest: any) {
+     async subscribeTopic(callRequest: any): Promise<void> {
         // Init resposnse
         var reply = new subscribeMessages.SubscribeResponse();
 
@@ -164,18 +164,33 @@ export class CummareServer {
      * @param topic Topic to control 
      * @param message Message to control
      */
-    static controlTopicAndMessageAndEventuallyPublishMessage(topic, message): boolean {
+    static async controlTopicAndMessageAndEventuallyPublishMessage(topic, message): Promise<boolean> {
         // Check validity
-        let validFormat = typeof (JSON.parse(message)) === 'object' &&  // Messages must be objects
-                          message != null &&                            // Messages must not be null
-                          this.allowedTopics.includes(topic)            // Topic is allowed
+        let validFormat: boolean = typeof (JSON.parse(message)) === 'object' &&     // Messages must be objects
+                          message != null &&                                        // Messages must not be null
+                          this.allowedTopics.includes(topic)                        // Topic is allowed
+
+        // Check if element exists
+        let exists: boolean = (await this.redisHandler.getTopic(topic))
+            // Remove timestamps
+            .map((message) => {
+                // Get object and removes timestamp
+                let messageObject = JSON.parse(message)
+                delete messageObject.timestamp
+
+                // Return stringified version
+                return JSON.stringify(messageObject)
+            })
+
+            // Check inclusion
+            .includes(message)
 
         // Append on queue if valid
-        if(validFormat)
+        if(validFormat && !exists)
             this.redisHandler.setTopic(topic, message)
 
         // Return validity
-        return validFormat
+        return validFormat && !exists
     }
 
     /**

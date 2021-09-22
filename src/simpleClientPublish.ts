@@ -3,13 +3,11 @@ import { CummareClient } from './peers/CummareClient'
 import { readFileSync } from 'fs';
 
 /**
- * Simple client.
+ * Simple PUBLISH client.
  * 
- * It does 2 main tasks
- *    Send message and topic to servers (PUBLISH)
- *    Receive all topics by servers (SUBSCRIBE)
+ * It sends message and topic to servers (PUBLISH)
  */
-function mainClient() {
+function mainPublishClient() {
   // Set cummare server configuration from json file
   const cummareClientConfig = JSON.parse(
     readFileSync('./CummareClientConfig.json', 'utf-8')
@@ -30,17 +28,7 @@ function mainClient() {
         else
           console.log(`${serverBind} has NOT received message`)
     });
-
-    // Subscribe message request
-    let call = cummareClient.subscribeTopic(cummareClientConfig.topic);
-    call.on('data', function(response) {
-      console.log( `Received: '${response.getMessage()}' for topic '${cummareClientConfig.topic}''`);
-    });
-    call.on('end', function() {
-        console.log(`Fetched all messages for topic '${cummareClientConfig.topic}'`)
-    });
   });
-
 }
 
-mainClient();
+mainPublishClient();
