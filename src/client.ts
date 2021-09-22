@@ -32,8 +32,12 @@ function mainClient() {
     });
 
     // Subscribe message request
-    cummareClient.subscribeTopic(cummareClientConfig.topic, (message) => {
-        console.log(`${message} for topic`)
+    let call = cummareClient.subscribeTopic(cummareClientConfig.topic);
+    call.on('data', function(response) {
+      console.log( `Received: '${response.getMessage()}' for topic '${cummareClientConfig.topic}''`);
+    });
+    call.on('end', function() {
+        console.log(`Fetched all messages for topic '${cummareClientConfig.topic}'`)
     });
   });
 

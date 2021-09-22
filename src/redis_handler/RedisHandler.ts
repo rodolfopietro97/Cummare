@@ -57,14 +57,4 @@ export class RedisHandler {
         
         return listOfMessages
     }
-
-    test(){
-        this.redisClient.set("foo", "weeeeeeeeeeeeeeeeeeeeeeeeeee"); // returns promise which resolves to string, "OK"
-
-
-        this.redisClient.get("foo").then(function (result) {
-            console.log(result); // Prints "bar"
-          });
-          
-    }
 }

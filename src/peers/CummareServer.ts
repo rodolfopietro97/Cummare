@@ -92,7 +92,7 @@ export class CummareServer {
      * Start function.
      * Server start listening on bind
      */
-    start() {
+    start(): void {
         // For each binds start listening
         for (let index = 0; index < this.binds.length; index++) {
             this.grpcServers[index].bindAsync(
@@ -112,7 +112,7 @@ export class CummareServer {
      * @param callRequest 
      * @param publishMessageCallback 
      */
-    publishMessage(callRequest: any, publishMessageCallback: any) {
+    publishMessage(callRequest: any, publishMessageCallback: any): void {
         // Init resposnse
         var reply = new publishMessages.PublishResponse();
 
@@ -134,23 +134,23 @@ export class CummareServer {
      * @param callRequest 
      * @param publishMessageCallback 
      */
-     subscribeTopic(callRequest: any) {
+     async subscribeTopic(callRequest: any) {
         // Init resposnse
         var reply = new subscribeMessages.SubscribeResponse();
 
         // Get topic that client want to subscribe
         var currentSubscribedTopic = callRequest.request.getTopic()
 
-        // Response
-        reply.setMessage("weeee")
-        callRequest.write(reply)
+        // Fetch all messages available
+        let messages = await CummareServer.redisHandler.getTopic(currentSubscribedTopic)
+        
+        // Stream each message
+        for (let index = 0; index < messages.length; index++) {
+            reply.setMessage(messages[index]);
+            callRequest.write(reply)
+        }
 
-        reply.setMessage("ouuuuuuuuuu")
-        callRequest.write(reply)
-
-        reply.setMessage(currentSubscribedTopic)
-        callRequest.write(reply)
-
+        // End GRPC call
         callRequest.end();
     }
 
@@ -176,5 +176,22 @@ export class CummareServer {
 
         // Return validity
         return validFormat
+    }
+
+    /**
+     * Fetch messages for a specific topic
+     * 
+     * NOTE: This method is static to avoid problem with
+     * GRPC call on this.subscribeTopic()
+     * 
+     * @param topic Topic for which subscribe messages
+     */
+    static fetchMessagesForSpecifiedTopic(topic) {
+        var messagesForTopic = []
+        this.redisHandler.getTopic(topic).then((messages) => {
+            messagesForTopic = messages
+        });
+
+        return messagesForTopic
     }
 }

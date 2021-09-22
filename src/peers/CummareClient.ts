@@ -94,22 +94,13 @@ export class CummareClient {
      * Subscribe to a topic function
      * 
      * @param topic Topic to subscribe
-     * @param onSubscribeTopic Callback that sat "What do with on subscribe message response"
      */
-    subscribeTopic(topic: string, onSubscribeTopic: any): void {
-        // Init request
+    subscribeTopic(topic: string) {
+        // Init request and set topic of request
         var request = new subscribeMessages.SubscribeRequest();
-
         request.setTopic(topic);
 
-        // Subscribe for specific client
-        let call = this.grpcSubscribeClient.subscribeTopic(request);
-
-        call.on('data', function(response) {
-            console.log(response.getMessage());
-        });
-        call.on('end', function() {
-            console.log("Server has finish stream")
-        });
+        // Return stream
+        return this.grpcSubscribeClient.subscribeTopic(request);
     }
 }
