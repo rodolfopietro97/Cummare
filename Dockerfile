@@ -1,8 +1,15 @@
 # Nodejs image
 FROM node
 
+# Expose ports
+EXPOSE 50052
+EXPOSE 50053
+
 # Create working directory
 WORKDIR /app/cummare
+
+# Update node
+RUN npm install -g npm@latest
 
 # Install Global dependendencies
 RUN npm install -g typescript && npm install -g grpc-tools
