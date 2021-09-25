@@ -29,7 +29,7 @@ function main() {
   })
 
   // Init server
-  var cummareServer = new CummareServer(cummareServerConfig.binds, redisHandler, allowedTopics);
+  var cummareServer = new CummareServer(cummareServerConfig.bind, redisHandler, allowedTopics);
 
   // Start server
   cummareServer.start();

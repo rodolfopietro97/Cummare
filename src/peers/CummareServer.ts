@@ -20,16 +20,16 @@ var grpc = require('@grpc/grpc-js');
 export class CummareServer {
 
     /**
-     * Internal GRPC servers to use
+     * Internal GRPC server to use
      */
-    grpcServers: Array<any> = []
+    grpcServer: any
 
     /**
-     * Binds address-port.
+     * Bind address-port.
      * 
      * A pair ip:port where server listening
      */
-    binds: Array<string> = []
+    bind: string
 
     /** 
      * Redis client handler 
@@ -47,12 +47,12 @@ export class CummareServer {
     /**
      * Constructor with parameters
      * 
-     * @param binds Pair ip:port where server must listening
+     * @param bind Pair ip:port where server must listening
      * @param redisHandler Redis handler to use
      */
-    constructor(binds: Array<string>, redisHandler: RedisHandler, allowedTopics: Array<string>) {
+    constructor(bind: string, redisHandler: RedisHandler, allowedTopics: Array<string>) {
         // Init binding
-        this.binds = binds
+        this.bind = bind
 
         // Init redis handler
         CummareServer.redisHandler = redisHandler
@@ -60,32 +60,28 @@ export class CummareServer {
         // Init allowed topics
         CummareServer.allowedTopics = allowedTopics
 
-        // Init grpc servers for each bind
-        for (let index = 0; index < this.binds.length; index++) {
-            this.grpcServers.push(new grpc.Server());
-        }
+        // Init grpc server
+        this.grpcServer = new grpc.Server();
 
         /*
          * Add services
          */
-        // Publish service for each grpcServer
-        this.grpcServers.forEach((grpcServer) => {
-            // Add publish service
-            grpcServer.addService(
-                publishServices.PublishTopicService,
-                {
-                    publishMessage: this.publishMessage
-                }
-            );
+        // Add publish service
+        this.grpcServer.addService(
+            publishServices.PublishTopicService,
+            {
+                publishMessage: this.publishMessage
+            }
+        );
 
-            // Add subscribe service
-            grpcServer.addService(
-                subscribeServices.SubscribeTopicService,
-                {
-                    subscribeTopic: this.subscribeTopic
-                }
-            );
-        });
+        // Add subscribe service
+        this.grpcServer.addService(
+            subscribeServices.SubscribeTopicService,
+            {
+                subscribeTopic: this.subscribeTopic
+            }
+        );
+
     }
 
     /**
@@ -93,17 +89,15 @@ export class CummareServer {
      * Server start listening on bind
      */
     start(): void {
-        // For each binds start listening
-        for (let index = 0; index < this.binds.length; index++) {
-            this.grpcServers[index].bindAsync(
-                this.binds[index],
-                grpc.ServerCredentials.createInsecure(),
-                () => {
-                    console.log(`Cummare server listening on ${this.binds[index]}`)
-                    this.grpcServers[index].start();
-                }
-            );
-        }
+        // Start listening for binded server
+        this.grpcServer.bindAsync(
+            this.bind,
+            grpc.ServerCredentials.createInsecure(),
+            () => {
+                console.log(`Cummare server listening on ${this.bind}`)
+                this.grpcServer.start();
+            }
+        );
     }
 
     /**
