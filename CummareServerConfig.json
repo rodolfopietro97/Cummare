@@ -6,6 +6,6 @@
         "family": 4,
         "db": 0
     },
-    "allowedTopics": ["transaction", "message"],
+    "allowedTopics": ["transaction", "random_requests", "random_responses"],
     "maxTopicsAgeMilliseconds": 5000
 }
