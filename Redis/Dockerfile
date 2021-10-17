@@ -5,7 +5,7 @@ FROM redis
 COPY redis.conf /usr/local/etc/redis/redis.conf
 
 # Port
-EXPOSE 6380
+EXPOSE 6379
 
 # Uncomment if you want to use docker run/build directly.
 # CMD is already in docker-compose

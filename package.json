@@ -2,13 +2,9 @@
     "name": "cummare_p2p_layer",
     "version": "1.0.0",
     "description": "P2P Layer of NdujaChain Blockchain",
-    "main": "server.js",
+    "main": "app.js",
     "scripts": {
-        "server": "npm run build && node dist/server.js",
-        "publish_client": "npm run build && node dist/simpleClientPublish.js",
-        "subscribe_client": "npm run build && node dist/simpleClientSubscribe.js",
-        "refresher": "npm run build && node dist/refresher.js",
-        "viewer": "npm run build && node dist/viewer.js",
+        "server": "sh start.sh",
         "build": "tsc && sh buildProtos.sh",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -26,6 +22,7 @@
     "dependencies": {
         "@grpc/grpc-js": "^1.3.7",
         "google-protobuf": "^3.18.0",
-        "ioredis": "^4.27.9"
+        "ioredis": "^4.27.9",
+        "node-rsa": "^1.1.1"
     }
 }

@@ -1,9 +1,0 @@
-{
-    "serverBinds": ["127.0.0.1:50052"],
-    "message": {
-        "from": "alice",
-        "to": "bob",
-        "amount": 4
-    },
-    "topic": "message"
-}

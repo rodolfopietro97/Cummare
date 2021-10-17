@@ -159,12 +159,19 @@ export class CummareServer {
      * @param message Message to control
      */
     static async controlTopicAndMessageAndEventuallyPublishMessage(topic, message): Promise<boolean> {
-        // Check validity
+        /*
+         * 1) Check GENERAL validity
+         */
         let validFormat: boolean = typeof (JSON.parse(message)) === 'object' &&     // Messages must be objects
                           message != null &&                                        // Messages must not be null
                           this.allowedTopics.includes(topic)                        // Topic is allowed
 
-        // Check if element exists
+        /*
+         * 2) Check if element (without timestamp) exists
+         *
+         * TODO: Improove the check
+         * 
+         */
         let exists: boolean = (await this.redisHandler.getTopic(topic))
             // Remove timestamps
             .map((message) => {
@@ -179,28 +186,58 @@ export class CummareServer {
             // Check inclusion
             .includes(message)
 
+        
+
         // Append on queue if valid
-        if(validFormat && !exists)
+        if(validFormat && !exists && this.isValidMessageSyntaxForTopic(JSON.parse(message), topic))
             this.redisHandler.setTopic(topic, message)
 
         // Return validity
-        return validFormat && !exists
+        return validFormat && !exists && this.isValidMessageSyntaxForTopic(JSON.parse(message), topic)
     }
 
     /**
-     * Fetch messages for a specific topic
+     * Tell if for a specific topic the syntax is valid
      * 
-     * NOTE: This method is static to avoid problem with
-     * GRPC call on this.subscribeTopic()
+     * NOTE: Here you can defineì the syntattically validity of messages
+     * for your specific topic
      * 
-     * @param topic Topic for which subscribe messages
+     * @param message
+     * @param topic 
      */
-    static fetchMessagesForSpecifiedTopic(topic) {
-        var messagesForTopic = []
-        this.redisHandler.getTopic(topic).then((messages) => {
-            messagesForTopic = messages
-        });
+     static isValidMessageSyntaxForTopic(message, topic) : boolean {
+        // Assume it valid
+        var valid: boolean = true
 
-        return messagesForTopic
+        /*
+         *  Check syntax for format
+         * TODO: Improove validation 
+         */
+        // Transaction topic
+        if(topic == "transaction") {
+            valid = message.from !== undefined && message.to !== undefined && message.amount !== undefined
+        }
+
+        // Return validity
+        return valid;
     }
+
+    // /**
+    //  * Fetch messages for a specific topic
+    //  * 
+    //  * NOTE: This method is static to avoid problem with
+    //  * GRPC call on this.subscribeTopic()
+    //  * 
+    //  * @param topic Topic for which subscribe messages
+    //  */
+    // static fetchMessagesForSpecifiedTopic(topic) {
+    //     var messagesForTopic = []
+    //     this.redisHandler.getTopic(topic).then((messages) => {
+    //         messagesForTopic = messages
+    //     });
+
+    //     return messagesForTopic
+    // }
+
+
 }

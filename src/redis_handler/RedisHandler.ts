@@ -60,11 +60,38 @@ export class RedisHandler {
      * Get all messages for a topic
      * 
      * @param topic Topic to read
+     * 
      * @returns Messages of topic
      */
     async getTopic(topic: string): Promise<Array<string>> {
         let listOfMessages = await this.redisClient.lrange(topic, 0, -1);
         
         return listOfMessages
+    }
+
+    /**
+     * Get first n messages for a topic.
+     * This function is useful for viewer
+     * 
+     * @param topic Topic to read
+     * @param numberOfMessagesToGet Maximum number of messages to get
+     * 
+     * @returns Messages of topic
+     */
+     async getFirstNMessagesForATopic(topic: string, numberOfMessagesToGet: Number): Promise<Array<string>> {
+        let listOfMessages = await this.redisClient.lrange(topic, 0, numberOfMessagesToGet);
+        
+        return listOfMessages
+    }
+
+    /**
+     * Get size (number of messages) of a topic
+     * 
+     * @param topic Topic to read
+     * 
+     * @returns Size of topic
+     */
+     async getTopicSize(topic: string): Promise<Number> {
+        return this.redisClient.llen(topic);
     }
 }
