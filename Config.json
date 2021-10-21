@@ -15,7 +15,7 @@
         "random_responses"
     ],
 
-    "maxTopicsAgeMilliseconds": 5000,
+    "maxTopicsAgeMilliseconds": 10000,
     "doUpdateEveryMilliseconds": 1000,
 
     "viewEveryMilliseconds": 1000,
