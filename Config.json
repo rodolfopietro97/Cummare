@@ -15,8 +15,8 @@
         "random_responses"
     ],
 
-    "maxTopicsAgeMilliseconds": 10000,
-    "doUpdateEveryMilliseconds": 1000,
+    "maxTopicsAgeMilliseconds": 1000,
+    "doUpdateEveryMilliseconds": 500,
 
     "viewEveryMilliseconds": 1000,
     "maximumMessagesToDisplayInViewer": 10
